@@ -3,36 +3,41 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { loginUser } from "./authService";
 import LoginOrRegisterPage from "./LoginOrRegisterPage";
+import { useToast } from "../../hoks/useToast"
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
+  const [rol, setRole] = useState("");
   const [redirect, setRedirect] = useState(false);
   const [dayName, setDayName] = useState([])
-  const [active ,setActive] = useState("")
+  const [loading ,setLoading] = useState(false)
+  const { showToast } = useToast()
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
     if (email !== "" && password !== "") {
+      setLoading(true)
       try {
         const { user, role } = await loginUser(email, password);
         setRole(role);
         setRedirect(true);
+        
        
       } catch (error) {
         if (error.code === "auth/internal-error") {
-          alert("اسم الحساب او كلمة المرور خاطئه");
+          showToast("اسم الحساب او كلمة المرور خاطئه","error");
         } else if (error.code === "auth/invalid-email") {
-          alert("هاذا الحساب غير موجود");
+          showToast("هاذا الحساب غير موجود","error");
           console.log(error.code);
         } else if (error.code === "auth/network-request-failed") {
-          alert(`فشل الاتصال برجاء التحقق من الانترنت`);
+          showToast(`فشل الاتصال برجاء التحقق من الانترنت`,"error");
         } else {
-          alert(`حدث خطاء غير متوقع ${error.message}`);
+          showToast(`حدث خطاء غير متوقع `,"error");
         }
       }
+      setLoading(false)
     } else {
-      alert("برجاء تعبئه البينات");
+      showToast(`برجاء تعبئه جميع الاحقال`,"warn");
     }
  
   };
@@ -45,10 +50,6 @@ function LoginPage() {
     getDayName();
   }, []);
 
-  if (redirect && dayName.length > 0) {
-    
-    return <Navigate to={`/home?dayName=${dayName.at(-1).id}`}/>;
-  }
 
   return (
     <>
@@ -74,10 +75,13 @@ function LoginPage() {
           />
 
           <button
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-xl transition-all shadow-md hover:shadow-lg"
+            disabled={loading}
+            className={`bg-indigo-600 text-white font-semibold py-2 rounded-xl transition-all shadow-md 
+            ${loading ? "opacity-50 cursor-not-allowed" : "hover:bg-indigo-700 hover:shadow-lg"}
+          `}
             onClick={handleLogin}
           >
-            تسجيل الدخول
+            {loading ? "جاري تسجيل الدخول" : " تسجيل الدخول"}
           </button>
 
           <p className="text-sm text-gray-500 mt-2">

@@ -16,7 +16,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav  className="bg-white z-50 text-gray-800 shadow-md p-4  relative">
+    <nav  className="bg-white z-40 text-gray-800 shadow-md p-4  relative">
       <div className="container mx-auto flex justify-between items-center">
         <h1 className="text-xl font-bold">ادارة المخزن</h1>
 

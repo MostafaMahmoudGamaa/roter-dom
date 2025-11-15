@@ -5,10 +5,11 @@ import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
 import AssignmentTurnedInOutlinedIcon from "@material-ui/icons/AssignmentTurnedInOutlined";
 import EventAvailableIcon from "@material-ui/icons/EventAvailable";
 import { Link, useSearchParams } from "react-router-dom";
+import { useToast } from "../../../../hoks/useToast";
 
 export default function MainPageContent() {
   const { user } = useContext(AuthStateContext);
-  const [name, setName] = useState("يوسف");
+  const [name, setName] = useState("عمرو");
   const [mlian, setMlian] = useState("15");
   const [money, setMoney] = useState("4950");
   const [fadi, setFadi] = useState("1");
@@ -17,8 +18,9 @@ export default function MainPageContent() {
   const today = new Date().toDateString();
   const [param] = useSearchParams();
   const dayName = param.get("dayName");
+  const { showToast } = useToast()
 
-  const mangerOfWarehouse = new WarehouseManger(dayName);
+  const mangerOfWarehouse = new WarehouseManger(dayName,showToast);
   useEffect(() => {
     async function getDayName() {
       const d = await mangerOfWarehouse.getAllStock();
@@ -32,7 +34,7 @@ export default function MainPageContent() {
     });
     return () => unsbscribe();
   }, []);
-
+  console.log(user.email);
   useEffect(() => {
     async function getTraders() {
       const traders = await mangerOfWarehouse.getAllTraders();
@@ -42,7 +44,7 @@ export default function MainPageContent() {
   }, []);
 
   function ehandler() {
-    mangerOfWarehouse.addStock(mlian, fadi, money);
+    mangerOfWarehouse.addTrader(name,mlian, fadi, money);
   }
 
   return (
@@ -124,7 +126,7 @@ export default function MainPageContent() {
             <div className="w-full px-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {trader.map((t) => (
-                  <Link key={t.id} to={`trader?name=${t.id}&&day=${today}`}>
+                  <Link key={t.id} to={`trader?name=${t.id}&day=${dayName}`}>
                     <div className="w-full max-w-sm bg-gray-50 rounded-2xl shadow-md p-4 hover:shadow-lg transition">
                       <h1 className="text-gray-800 font-semibold text-base truncate">
                         {t.id}

@@ -1,9 +1,14 @@
 import firebase from "firebase";
 import { db } from "../firebaseConfig";
+import { useToast } from "../hoks/useToast";
 
 export class WarehouseManger {
-  constructor(dateString) {
+  
+  
+  constructor(dateString, useToast) {
+    
     // لو التاريخ موجود استخدمه، غير كده خده من اليوم الحالي بصيغة YYYY-MM-DD
+    this.toast = useToast
     this.today = dateString || new Date().toISOString().slice(0, 10);
     this.dayDocRef = db.collection("mgzan").doc(this.today);
   }
@@ -61,7 +66,7 @@ export class WarehouseManger {
     const stockRef = this.dayDocRef.collection("stock_data").doc("main");
     const stockSnap = await stockRef.get();
     if (!stockSnap.exists) {
-      alert("هاذا المخزن غير موجود");
+      this.toast("هاذا المخزن غير موجود","warn");
     }
  
     const stock = stockSnap.data();
@@ -86,7 +91,7 @@ export class WarehouseManger {
         totalHadid: traderSnap.data().totalHadid + (mlian - fadi),
         waqt: new Date().toLocaleTimeString(),
       });
-      alert("تم الاستلام من التاجر و تحديث البينات");
+      this.toast("تم الاستلام من التاجر و تحديث البينات","sucs");
     } else {
       batch.set(tradeRef, {
         traderMlian: mlian,
@@ -96,7 +101,7 @@ export class WarehouseManger {
         waqt: new Date().toLocaleTimeString(),
       });
 
-      alert("تم اضافه تاجر و تحديث البينات");
+      this.toast("تم اضافه تاجر و تحديث البينات","sucs");
     }
     const logRef = tradeRef.collection("logs").doc();
     batch.set(logRef, {
@@ -119,7 +124,7 @@ export class WarehouseManger {
         if (docSnap.exists) {
           onData(docSnap.data());
         } else {
-          console.log("لا يوجد بينات او حدث خطاء");
+          this.toast("لا يوجد بينات او حدث خطاء","error");
         }
       });
     return dat;
@@ -132,11 +137,11 @@ export class WarehouseManger {
       if (snapShot.exists) {
         return snapShot.data();
       } else {
-        alert("لا يوجد بينات هنا");
+        this.toast("لا يوجد بينات هنا","warn");
         return null;
       }
     } catch (error) {
-      alert(`حدث خطاء عجيب ${error}`);
+      this.toast(`حدث خطاء عجيب ${error}`,"error");
     }
   }
 
@@ -144,7 +149,7 @@ export class WarehouseManger {
     const tradersRef = this.dayDocRef.collection("trades");
     const snapShot = await tradersRef.get();
     if (snapShot.empty) {
-      alert("هاذا اليوم لا يوجد فيه تجار");
+      this.toast("هاذا اليوم لا يوجد فيه تجار","warn")
       return [];
     }
     const traders = snapShot.docs.map((doc) => ({
@@ -176,7 +181,7 @@ export class WarehouseManger {
     const snapStock = await stockRef.orderBy("h", "asc").get();
 
     if (snapStock.empty) {
-      console.warn("مافيش أي مستندات");
+      this.toast("مافيش أي مستندات","warn");
       return [];
     }
 

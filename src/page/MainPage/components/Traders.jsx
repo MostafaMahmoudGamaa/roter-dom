@@ -7,10 +7,10 @@ import { useParams, useSearchParams } from "react-router-dom";
 export default function Traders() {
   const [traderData, setTraderData] = useState({});
   const [traderLog, setTraderLog] = useState([]);
-  const mangerOfWarehouse = new WarehouseManger();
   const [param] = useSearchParams();
   const traderID = param.get("name")
   const traderDate = param.get("day")
+  const mangerOfWarehouse = new WarehouseManger(traderDate);
   useEffect(() => {
     async function getTradeData() {
       const data = await mangerOfWarehouse.getTrader(traderID);
@@ -51,19 +51,19 @@ export default function Traders() {
           <div className="bg-gray-100 rounded-lg p-4 text-center transform duration-300 hover:shadow-md hover:scale-110">
             <p className="text-gray-500 text-sm">عدد الفاضي الي سلمه</p>
             <p className="text-red-600 font-bold text-lg">
-              {traderData.traderFadi}
+              {traderData.traderFadi ?? "0"}
             </p>
           </div>
           <div className="bg-gray-100 rounded-lg p-4 text-center transform duration-300 hover:shadow-md hover:scale-110">
             <p className="text-gray-500 text-sm">الحديد المتبقي عنده</p>
             <p className="text-green-600 font-bold text-lg">
-              {traderData.totalHadid}
+              {traderData.totalHadid ?? "0"}
             </p>
           </div>
           <div className="bg-gray-100 rounded-lg p-4 text-center transform duration-300 hover:shadow-md hover:scale-110">
             <p className="text-gray-500 text-sm">الفلوس الي دفعها </p>
             <p className="text-yellow-600 font-bold text-lg">
-              {traderData.traderMoney}
+              {traderData.traderMoney ?? "0"}
             </p>
           </div>
           <div className="bg-gray-100 rounded-lg p-4 text-center transform duration-300 hover:shadow-md hover:scale-110">
@@ -101,7 +101,7 @@ export default function Traders() {
                   }}
                   className="w-full text-left px-4 py-3 font-semibold text-gray-800 hover:bg-gray-100 transition"
                 >
-                  سجل المعاملات {param.id} -
+                  سجل المعاملات - {traderID}
                    <span className="text-gray-500 text-sm"> {log.waqt} </span>
                 </button>
 
