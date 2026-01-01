@@ -1,5 +1,5 @@
 import AllDaysLest from "./AllDaysLest";
-import AddTraderF from "../../frontPage/addTrader";
+import AddTraderF from "../../FAB/FAB";
 
 export default function MainPageContainer({
   selectedDay,
@@ -22,7 +22,7 @@ export default function MainPageContainer({
 
         {/* الزرار العائم */}
         <div>
-          <AddTraderF /> {/* ده الزرار بتاع اضافه تاجر  */}
+          <AddTraderF /> 
         </div>
       </div>
     </div>

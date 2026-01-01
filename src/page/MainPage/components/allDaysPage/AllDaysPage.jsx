@@ -28,9 +28,9 @@ export default function AllDaysPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4 sm:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4 sm:p-8 overflow-hidden">
       {/* Header Section */}
-      <div className="mb-10 relative">
+      <div className="mb-10 relative ">
         <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-blue-200 to-transparent dark:from-blue-900/30 rounded-full -mr-16 -mt-10 opacity-60"></div>
         
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">

@@ -1,36 +1,45 @@
-
-import React from 'react';
-import LogContainer from './LogContainer';
+import React from "react";
+import LogContainer from "./LogContainer";
+import { useGetStockLogs } from "../../../../hoks/useStock";
+import AppLoader from "../../../../AppLoader/AppLoader";
 
 export default function StockLogs() {
-  const fakeLogs = [
-    {
-      id: 1,
-      before: { mlian: 120, fadi: 45, money: 3000 },
-      trader: { mlian: 10, fadi: 2, money: 150 },
-      after: { mlian: 110, fadi: 47, money: 3150 },
-      time: '10:22 AM'
-    },
-    {
-      id: 2,
-      before: { mlian: 110, fadi: 47, money: 3150 },
-      trader: { mlian: 5, fadi: 1, money: 80 },
-      after: { mlian: 105, fadi: 48, money: 3230 },
-      time: '12:05 PM'
-    },
-    {
-      id: 3,
-      before: { mlian: 105, fadi: 48, money: 3230 },
-      trader: { mlian: 15, fadi: 0, money: 200 },
-      after: { mlian: 90, fadi: 48, money: 3430 },
-      time: '3:40 PM'
-    }
-  ];
+  const { data: stockLog, isLoading: stockLoading } = useGetStockLogs();
+
+  if (stockLoading) return <AppLoader />;
+
+  const logData = stockLog.map((log, i) => {
+    return {
+      before: {
+        mlian: log?.before_available_mlian,
+        fadi: log?.before_available_fadi,
+        money: log?.before_available_money,
+        solid: log?.before_sold_mlian,
+        totalMoney: log?.before_totalMoney,
+        tradersMoney: log?.before_traders_money,
+      },
+      trader: {
+        mlian: log?.traderMlian,
+        fadi: log?.traderFadi,
+        money: log?.traderMoney,
+        traderName: log?.traderName,
+      },
+      after: {
+        mlian: log?.after_available_mlian,
+        fadi: log?.after_available_fadi,
+        money: log?.after_available_money,
+        solid: log?.after_sold_mlian,
+        totalMoney: log?.after_totalMoney,
+        tradersMoney: log?.after_traders_money,
+      },
+      time: log?.waqt,
+    };
+  });
 
   return (
     <div className="min-h-screen p-6 bg-gray-100">
       <h1 className="text-3xl font-bold text-center mb-6">سجل التغييرات</h1>
-      <LogContainer logs={fakeLogs} />
+      <LogContainer logs={logData} />
     </div>
   );
 }

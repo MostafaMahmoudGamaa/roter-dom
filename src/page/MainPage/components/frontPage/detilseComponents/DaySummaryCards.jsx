@@ -1,9 +1,8 @@
-import React from "react";
 
-export default function DaySummaryCards({ label, color, value, icon }) {
+export default function DaySummaryCards({ label, color, value, icon, border }) {
   return (
     <div
-      className={`flex items-center border-l-4 border-${color}-500  justify-between p-6 rounded-2xl shadow-lg  bg-white dark:bg-gray-800 transform hover:scale-[1.02] transition-transform`}
+      className={`flex items-center ${border} justify-between p-6 rounded-2xl shadow-lg  bg-white dark:bg-gray-800 transform hover:scale-[1.02] transition-transform`}
     >
       
       <div className={`flex  flex-col text-right`}>

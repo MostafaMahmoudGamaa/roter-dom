@@ -163,7 +163,10 @@ export class WarehouseManger {
       this.toast("لا يوجد بيانات");
       return null;
     } catch (e) {
+       console.error(e);
+   
       this.toast(`حدث خطأ ما ${e}`, "error");
+      return
     }
   }
 
@@ -221,5 +224,22 @@ export class WarehouseManger {
       id: d.id,
       data: d.data() || {},
     }));
+  }
+
+  async getStockLog(){
+    try{
+      const logRef = this.mgzanlog.collection("log")
+      const logSnap = await logRef.orderBy("h","asc").get()
+     if (logSnap.empty){
+      this.toast("لا يوجد معاملات مسجله", "warn")
+      return []
+     }
+     
+     return logSnap.docs.map((log)=> log.data())
+
+    }catch(e){
+      this.toast("حدث خطاء اثناء جلب المعاملات", "error")
+      console.log("error when you get all stock log from class", e);
+    }
   }
 }

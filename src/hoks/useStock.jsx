@@ -19,15 +19,15 @@ export function useStock() {
 
   const query = useQuery(
     ["stock", dayName],
-    async () => {
-      const wm = new WarehouseManger(dayName, showToast);
+    async () => {  
       try {
+        const wm = new WarehouseManger(dayName, showToast);
         const stockData = await wm.getStock();
         const traders = await wm.getAllTraders();
-        console.log("تمت العمليه");
+
         return { stockData, traders };
       } catch (err) {
-        console.log("err when you get stock", err);
+        console.log(Error("err when you get stock"), err);
       }
     },
     {
@@ -50,7 +50,7 @@ export function useTrader(traderID) {
       const traderLog = await wm.getTraderLog(traderID);
       return { trader, traderLog };
     } catch (err) {
-      console.log("err when you get all traders", err);
+      console.log (Error("err when you get  trader", err));
     }
   });
 }
@@ -83,6 +83,23 @@ export function getAllDayesPageData(dayid) {
       return  {allTradersDaysPage, allStockDataDaysPage }
     }catch(e){
       console.log("Eror O.Killer", e);
+      return
+    }
+  })
+  
+}
+
+export function useGetStockLogs() {
+  const { selectedDay } = useAllDays();
+  const { showToast } = useToast();
+  return useQuery(["stockLog", selectedDay],  async() =>{
+    try{
+      const wm = new WarehouseManger(selectedDay, showToast)
+      const getStockLogs = await wm.getStockLog()
+      return getStockLogs
+    }catch(e){
+      showToast("خدث خطاء ", "error")
+      console.log("error when you get stock logs", e);
       return
     }
   })

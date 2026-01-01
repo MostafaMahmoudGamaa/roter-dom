@@ -1,4 +1,7 @@
 import TraderCard from "./TraderCard";
+import TraderFilltring from "./TraderFilltring";
+
+
 
 export default function TradersQuickView({ stockLoading, traders }) {
   if (!traders || traders.length === 0) {
@@ -18,7 +21,7 @@ export default function TradersQuickView({ stockLoading, traders }) {
       </h1>
 
       <div className="w-full px-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div >
           {stockLoading 
               /* هنا سكيليتون لودينج  */
             ? Array.from({ length: 4 }).map((_, index) => (
@@ -32,9 +35,12 @@ export default function TradersQuickView({ stockLoading, traders }) {
                   <div className="h-3 bg-gray-300 rounded dark:bg-gray-600"></div>
                 </div>
               ))
-            : traders.map((trader) => (
-                <TraderCard key={trader.id} trader={trader} />
-              ))}
+            : <div>  
+             
+              <TraderFilltring traders={traders} />
+            </div>
+                 }
+             
         </div>
       </div>
     </section>

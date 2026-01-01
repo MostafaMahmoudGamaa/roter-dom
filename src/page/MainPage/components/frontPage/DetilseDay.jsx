@@ -15,51 +15,57 @@ export default function AnalyticsDataCards() {
     invalidData,
   } = useStock();
 
-  console.log(stockLoading ? " جاري التحميل": stock ? "" : stock);
   const toggle = (id)=> setTraderID(traderID === id ? null : id)
 
-  const fakeData = [
+  const cardData = [
     {
       label: "المليان المتوفر",
-      value: stock?.stockData.available_mlian,
+      value: stock?.stockData?.available_mlian,
       icon: <FaBoxOpen className="text-green-500" />,
       color: "green",
+      border: "border-l-4 border-green-500"
     },
     {
       label: "المليان المباع",
       value: stock?.stockData?.sold_mlian?? 0,
       icon: <FaBoxOpen className="text-red-500" />,
       color: "red",
+      border: "border-l-4 border-red-500"
     },
     {
       label: "الفرداني المباع",
       value: 15,
       icon: <FaUsers className="text-yellow-500" />,
       color: "yellow",
+      border: "border-l-4 border-yellow-500"
     },
     {
       label: "الفاضي المستلم",
-      value: stock?.stockData.available_fadi,
+      value: stock?.stockData?.available_fadi,
       icon: <FaTruck className="text-blue-500" />,
       color: "blue",
+      border: "border-l-4  border-blue-500"
     },
     {
       label: "الفاضي اللي برا",
       value: 12,
       icon: <FaTruck className="text-purple-500" />,
       color: "purple",
+      border: "border-l-4  border-purple-500"
     },
     {
       label: "الفلوس المستلمة",
-      value: stock?.stockData.available_money,
+      value: stock?.stockData?.available_money,
       icon: <FaDollarSign className="text-indigo-500" />,
       color: "indigo",
+      border: "border-l-4 border-indigo-500"
     },
     {
       label: "الفلوس عند التجار",
-      value: stock?.stockData.traders_money?? 0,
+      value: stock?.stockData?.traders_money?? 0,
       icon: <FaMoneyBillWave className="text-pink-500" />,
       color: "pink",
+      border: "border-l-4 border-pink-500"
     },
   ];
 
@@ -71,14 +77,14 @@ export default function AnalyticsDataCards() {
      
 
       <Section title={"بينات النقله"} >
-        {fakeData.map((detilse, i) => (
-          <Link to={"/home/log"}>
+        {cardData.map((detilse, i) => (
+          <Link key={i} to={"/home/log"}>
           <DaySummaryCards
-            key={i}
             label={detilse.label}
             value={detilse.value}
             icon={detilse.icon}
             color={detilse.color}
+            border={detilse.border}
           />
           </Link>
         ))}

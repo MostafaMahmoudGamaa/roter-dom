@@ -23,7 +23,7 @@ export default function AllDaysProvider({ children }) {
   }, [selectedDay]);
 
   useEffect(() => {
-    if (!daysLoading && allDays.length > 0) {
+    if (!daysLoading && allDays?.length > 0) {
       const LSvalue = localStorage.getItem("selected");
       if (!LSvalue || LSvalue === "null") {
         setSelectedDay(allDays?.at(-1)?.id);
