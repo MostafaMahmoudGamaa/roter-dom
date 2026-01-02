@@ -34,7 +34,7 @@ export default function AnalyticsDataCards() {
     },
     {
       label: "الفرداني المباع",
-      value: 15,
+      value: stock?.stockData?.frdany,
       icon: <FaUsers className="text-yellow-500" />,
       color: "yellow",
       border: "border-l-4 border-yellow-500"
@@ -48,7 +48,7 @@ export default function AnalyticsDataCards() {
     },
     {
       label: "الفاضي اللي برا",
-      value: 12,
+      value: stock?.stockData?.notAvalibal_fadi,
       icon: <FaTruck className="text-purple-500" />,
       color: "purple",
       border: "border-l-4  border-purple-500"

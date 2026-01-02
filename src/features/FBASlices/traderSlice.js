@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 export const addTrader = createAsyncThunk(
   "trader/add",
   async (data, thunkAPI) => {
-    const { traderMlian, traderMoney, traderName, traderfadi } =
+    const { traderMlian, traderMoney, traderName, traderfadi, traderSalry } =
       data.traderData;
 
     if (!traderName) {
@@ -22,7 +22,21 @@ export const addTrader = createAsyncThunk(
       });
     }
 
-    await data.addNewTrader(traderName, traderMlian, traderfadi, traderMoney);
+    data.addNewTrader
+      ? await data.addNewTrader(
+          traderName,
+          traderMlian,
+          traderfadi,
+          traderMoney,
+          traderSalry
+        )
+      : await data.addFrdany(
+          traderName,
+          traderMlian,
+          traderfadi,
+          traderMoney,
+          traderSalry
+        );
     data.handleClose();
     data.invalidData();
 
@@ -47,7 +61,6 @@ export const addTraderSlice = createSlice({
     addtrad: (s, action) => {},
   },
   extraReducers: (bulder) => {
-    console.log(bulder);
     bulder
       .addCase(addTrader.pending, (state) => {
         state.isLoading = true;

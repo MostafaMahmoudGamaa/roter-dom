@@ -4,6 +4,7 @@ import TraderLogItem from "./TraderLogItem";
 export default function TraderLogsSection({ traderData, loading, traderName }) {
   const { traderLog, trader } = traderData || {};
 
+
   return (
     <section className="bg-white shadow-md rounded-2xl p-6 dark:bg-gray-800 dark:shadow-gray-900/40">
       <h2 className="text-xl font-semibold text-gray-700 mb-4 dark:text-gray-100">
@@ -13,8 +14,8 @@ export default function TraderLogsSection({ traderData, loading, traderName }) {
       <div className="space-y-4">
         {/* معلومات ثابتة */}
         <div className="flex justify-between items-center bg-gray-50 p-4 rounded-xl dark:bg-gray-700">
-          <span className="dark:text-gray-200 font-medium">تاريخ الوصول:</span>
-          <span className="dark:text-gray-300">{"غير معلوم"}</span>
+          <span className="dark:text-gray-200 font-medium">سعر الاسطوانه للتاجر : </span>
+          <span className="dark:text-gray-300">{trader?.traderSalry + " $"}</span>
         </div>
 
         <div className="flex justify-between items-center bg-gray-50 p-4 rounded-xl dark:bg-gray-700">

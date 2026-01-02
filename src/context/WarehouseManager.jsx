@@ -51,8 +51,10 @@ export class WarehouseManger {
         available_mlian: mlian,
         available_fadi: fadi,
         available_money: money,
+        notAvalibal_fadi: 0,
         sold_mlian: 0,
         traders_money: 0,
+        frdany: 0,
         totalMoney: 0,
       });
 
@@ -62,7 +64,7 @@ export class WarehouseManger {
     }
   }
 
-  async addTrader(name, mlian, fadi, money, salary = 235) {
+  async addTrader(name, mlian, fadi, money, salary = 230) {
     name = String(name);
     mlian = Number(mlian);
     fadi = Number(fadi);
@@ -89,6 +91,7 @@ export class WarehouseManger {
       before_sold_mlian: stock.sold_mlian,
       before_traders_money: stock.traders_money,
       before_totalMoney: stock.totalMoney,
+      before_notAvalibal_fadi: stock.notAvalibal_fadi,
       traderMlian: mlian,
       traderFadi: fadi,
       traderMoney: money,
@@ -99,7 +102,8 @@ export class WarehouseManger {
       after_sold_mlian: stock.sold_mlian + mlian,
       after_traders_money: stock.traders_money + (mlian * salary - money),
       after_totalMoney: stock.totalMoney + mlian * salary,
-      h:firebase.firestore.FieldValue.serverTimestamp(),
+      after_notAvalibal_fadi: stock.notAvalibal_fadi + (mlian - fadi),
+      h: firebase.firestore.FieldValue.serverTimestamp(),
       waqt: new Date().toLocaleTimeString(),
     });
 
@@ -109,7 +113,10 @@ export class WarehouseManger {
       available_fadi: firebase.firestore.FieldValue.increment(fadi),
       available_money: firebase.firestore.FieldValue.increment(money),
       sold_mlian: firebase.firestore.FieldValue.increment(mlian),
-      traders_money: firebase.firestore.FieldValue.increment(mlian * salary - money  ),
+      notAvalibal_fadi: firebase.firestore.FieldValue.increment(mlian - fadi),
+      traders_money: firebase.firestore.FieldValue.increment(
+        mlian * salary - money
+      ),
       totalMoney: firebase.firestore.FieldValue.increment(mlian * salary),
     });
 
@@ -118,18 +125,62 @@ export class WarehouseManger {
     const traderSnap = await tradeRef.get();
 
     if (traderSnap.exists) {
-      batch.update(tradeRef, {
+      try {
+        batch.update(tradeRef, {
+          traderMlian: firebase.firestore.FieldValue.increment(mlian),
+          traderFadi: firebase.firestore.FieldValue.increment(fadi),
+          traderMoney: firebase.firestore.FieldValue.increment(money),
+          totalHadid: firebase.firestore.FieldValue.increment(mlian - fadi),
+          totalTraderMoney: firebase.firestore.FieldValue.increment(
+            mlian * salary
+          ),
+          solidTraderMoney: firebase.firestore.FieldValue.increment(
+            mlian * salary - money
+          ),
+          
+          waqt: new Date().toLocaleTimeString(),
+        });
+        this.toast("تم الاستلام من التاجر وتحديث البيانات", "sucs");
+      } catch (e) {
+        this.toast(e);
+      }
+    } else {
+      try {
+        batch.set(tradeRef, {
+          traderMlian: mlian,
+          traderFadi: fadi,
+          traderMoney: money,
+          totalHadid: mlian - fadi,
+          totalTraderMoney: mlian * salary,
+          solidTraderMoney: mlian * salary - money,
+          traderSalry : salary,
+          waqt: new Date().toLocaleTimeString(),
+        });
+        this.toast("تم إضافة تاجر وتحديث البيانات", "sucs");
+      } catch (e) {
+        this.toast(e);
+      }
+    }
+    //======= allTrader dealt with the stock
+    const allTraderRef = db.collection("allTraders").doc(name);
+    const allTraderSnap = await allTraderRef.get();
+
+    if (allTraderSnap.exists) {
+      batch.update(allTraderRef, {
         traderMlian: firebase.firestore.FieldValue.increment(mlian),
         traderFadi: firebase.firestore.FieldValue.increment(fadi),
         traderMoney: firebase.firestore.FieldValue.increment(money),
         totalHadid: firebase.firestore.FieldValue.increment(mlian - fadi),
-        totalTraderMoney: firebase.firestore.FieldValue.increment( mlian * salary  ),
-        solidTraderMoney: firebase.firestore.FieldValue.increment( mlian * salary - money ),
+        totalTraderMoney: firebase.firestore.FieldValue.increment(
+          mlian * salary
+        ),
+        solidTraderMoney: firebase.firestore.FieldValue.increment(
+          mlian * salary - money
+        ),
         waqt: new Date().toLocaleTimeString(),
       });
-      this.toast("تم الاستلام من التاجر وتحديث البيانات", "sucs");
     } else {
-      batch.set(tradeRef, {
+      batch.set(allTraderRef, {
         traderMlian: mlian,
         traderFadi: fadi,
         traderMoney: money,
@@ -138,11 +189,124 @@ export class WarehouseManger {
         solidTraderMoney: mlian * salary - money,
         waqt: new Date().toLocaleTimeString(),
       });
-      this.toast("تم إضافة تاجر وتحديث البيانات", "sucs");
     }
 
     // ====== ADD TRADER LOG ======
     const logRef = tradeRef.collection("logs").doc();
+    batch.set(logRef, {
+      mlian,
+      fadi,
+      money,
+      waqt: new Date().toLocaleTimeString(),
+      h: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+
+    await batch.commit();
+  }
+
+  async addFrdany(name, mlian, fadi, money, salary = 235) {
+    name = String(name);
+    mlian = Number(mlian);
+    fadi = Number(fadi);
+    money = Number(money);
+    salary = Number(salary);
+
+    const stockRef = this.mgzanlog;
+    const stockSnap = await stockRef.get();
+
+    if (!stockSnap.exists) {
+      this.toast("هذا المخزن غير موجود", "warn");
+      return;
+    }
+
+    const stock = stockSnap.data();
+    const batch = db.batch();
+
+    // ====== LOG BEFORE UPDATE ======
+    const stocklogRef = stockRef.collection("log").doc();
+    batch.set(stocklogRef, {
+      before_available_mlian: stock.available_mlian,
+      before_available_fadi: stock.available_fadi,
+      before_available_money: stock.available_money,
+      before_sold_mlian: stock.sold_mlian,
+      before_traders_money: stock.traders_money,
+      before_totalMoney: stock.totalMoney,
+      before_notAvalibal_fadi: stock.notAvalibal_fadi,
+      traderMlian: mlian,
+      traderFadi: fadi,
+      traderMoney: money,
+      traderName: name,
+      after_available_mlian: stock.available_mlian - mlian,
+      after_available_fadi: stock.available_fadi + fadi,
+      after_available_money: stock.available_money + money,
+      after_sold_mlian: stock.sold_mlian + mlian,
+      after_traders_money: stock.traders_money + (mlian * salary - money),
+      after_totalMoney: stock.totalMoney + mlian * salary,
+      after_notAvalibal_fadi: stock.notAvalibal_fadi + (mlian - fadi),
+      h: firebase.firestore.FieldValue.serverTimestamp(),
+      waqt: new Date().toLocaleTimeString(),
+    });
+
+    // ====== MAIN STOCK UPDATE (increment) ======
+    batch.update(stockRef, {
+      available_mlian: firebase.firestore.FieldValue.increment(-mlian),
+      available_fadi: firebase.firestore.FieldValue.increment(fadi),
+      available_money: firebase.firestore.FieldValue.increment(money),
+      sold_mlian: firebase.firestore.FieldValue.increment(mlian),
+      notAvalibal_fadi: firebase.firestore.FieldValue.increment(mlian - fadi),
+      traders_money: firebase.firestore.FieldValue.increment(
+        mlian * salary - money
+      ),
+      totalMoney: firebase.firestore.FieldValue.increment(mlian * salary),
+      frdany: firebase.firestore.FieldValue.increment(mlian),
+
+    });
+
+    // ====== TRADER DATA ======
+    const frdanyRef = this.dayDocRef.collection("frdany").doc(name);
+    const frdanySnap = await frdanyRef.get();
+
+    if (frdanySnap.exists) {
+      try {
+        batch.update(frdanyRef, {
+          traderMlian: firebase.firestore.FieldValue.increment(mlian),
+          traderFadi: firebase.firestore.FieldValue.increment(fadi),
+          traderMoney: firebase.firestore.FieldValue.increment(money),
+          totalHadid: firebase.firestore.FieldValue.increment(mlian - fadi),
+          totalTraderMoney: firebase.firestore.FieldValue.increment(
+            mlian * salary
+          ),
+          solidTraderMoney: firebase.firestore.FieldValue.increment(
+            mlian * salary - money
+          ),
+          
+          
+          waqt: new Date().toLocaleTimeString(),
+        });
+        this.toast("تم بيع الفرداني له مجددا", "sucs");
+      } catch (e) {
+        this.toast(e);
+      }
+    } else {
+      try {
+        batch.set(frdanyRef, {
+          traderMlian: mlian,
+          traderFadi: fadi,
+          traderMoney: money,
+          totalHadid: mlian - fadi,
+          totalTraderMoney: mlian * salary,
+          solidTraderMoney: mlian * salary - money,
+          traderSalry : salary,
+          waqt: new Date().toLocaleTimeString(),
+        });
+        this.toast("تم بيع الفرداني", "sucs");
+      } catch (e) {
+        this.toast(e);
+      }
+    }
+
+    // ====== ADD TRADER LOG ======
+    const logRef = frdanyRef.collection("logs").doc();
     batch.set(logRef, {
       mlian,
       fadi,
@@ -163,10 +327,10 @@ export class WarehouseManger {
       this.toast("لا يوجد بيانات");
       return null;
     } catch (e) {
-       console.error(e);
-   
+      console.error(e);
+
       this.toast(`حدث خطأ ما ${e}`, "error");
-      return
+      return;
     }
   }
 
@@ -200,8 +364,11 @@ export class WarehouseManger {
   }
 
   async getTraderLog(id) {
-    const traderRef = this.dayDocRef.collection("trades").doc(id).collection("logs");
-    const traderSnap = await traderRef.orderBy("h","asc").get();
+    const traderRef = this.dayDocRef
+      .collection("trades")
+      .doc(id)
+      .collection("logs");
+    const traderSnap = await traderRef.orderBy("h", "asc").get();
 
     if (traderSnap.empty) return [];
 
@@ -226,19 +393,18 @@ export class WarehouseManger {
     }));
   }
 
-  async getStockLog(){
-    try{
-      const logRef = this.mgzanlog.collection("log")
-      const logSnap = await logRef.orderBy("h","asc").get()
-     if (logSnap.empty){
-      this.toast("لا يوجد معاملات مسجله", "warn")
-      return []
-     }
-     
-     return logSnap.docs.map((log)=> log.data())
+  async getStockLog() {
+    try {
+      const logRef = this.mgzanlog.collection("log");
+      const logSnap = await logRef.orderBy("h", "asc").get();
+      if (logSnap.empty) {
+        this.toast("لا يوجد معاملات مسجله", "warn");
+        return [];
+      }
 
-    }catch(e){
-      this.toast("حدث خطاء اثناء جلب المعاملات", "error")
+      return logSnap.docs.map((log) => log.data());
+    } catch (e) {
+      this.toast("حدث خطاء اثناء جلب المعاملات", "error");
       console.log("error when you get all stock log from class", e);
     }
   }

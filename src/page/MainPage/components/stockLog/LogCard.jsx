@@ -80,6 +80,10 @@ export default function LogCard({ before, trader, after, time }) {
               <span className="text-gray-600 font-medium"> الفلوس الي برا  </span>
               <span className="text-xl font-bold text-red-700">{before.tradersMoney + "$"}</span>
             </div>
+            <div className="flex justify-between items-center p-3 bg-red-50 rounded-xl">
+              <span className="text-gray-600 font-medium">   الفاضي الغير مستلم  </span>
+              <span className="text-xl font-bold text-red-700">{before.notFadi}</span>
+            </div>
           </div>
         </motion.div>
         
@@ -172,6 +176,10 @@ export default function LogCard({ before, trader, after, time }) {
             <div className="flex justify-between items-center p-3 bg-green-50 rounded-xl">
               <span className="text-gray-600 font-medium">الفلوس الي برا</span>
               <span className="text-xl font-bold text-green-700">{after.tradersMoney+"$"}</span>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-green-50 rounded-xl">
+              <span className="text-gray-600 font-medium">الفاضي الغير مستلم</span>
+              <span className="text-xl font-bold text-green-700">{after.notFadi}</span>
             </div>
             
           </div>

@@ -50,7 +50,7 @@ export default function TraderSummarySection({ traderData, loading }) {
 
         <TraderStatsCard
           title="الإجمالي / المتبقي"
-          value="5" // قيمة ثابتة من الكود الأصلي
+          value= { ` ${trader.solidTraderMoney} / ${trader.totalTraderMoney}`} // قيمة ثابتة من الكود الأصلي
           loading={loading}
           color="purple"
           icon={<TrendingUpIcon className="text-purple-500" />}

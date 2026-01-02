@@ -29,7 +29,7 @@ export default function TraderLogItem({ log, traderName }) {
       <div className={`px-5 overflow-hidden transition-all duration-300 dark:text-gray-200 ${
         isExpanded ? 'max-h-96 py-4' : 'max-h-0'
       }`}>
-        {log.mlian && (
+        {log.mlian > 0 && (
           <p className="py-2 flex items-center">
             <span className="text-green-500 mr-2">✓</span>
             <span className="font-medium">قام باستلام:</span> 
@@ -40,7 +40,7 @@ export default function TraderLogItem({ log, traderName }) {
           </p>
         )}
 
-        {log.fadi && (
+        {log.fadi > 0 && (
           <p className="py-2 flex items-center">
             <span className="text-blue-500 mr-2">↗</span>
             <span className="font-medium">قام بتسليم:</span> 
@@ -51,7 +51,7 @@ export default function TraderLogItem({ log, traderName }) {
           </p>
         )}
 
-        {log.money && (
+        {log.money > 0 && (
           <p className="py-2 flex items-center">
             <span className="text-yellow-500 mr-2">💰</span>
             <span className="font-medium">قام بدفع:</span> 

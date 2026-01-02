@@ -31,7 +31,7 @@ export default function OverviewSection({
     // كرت المتبقي
     {
       title: "المتبقي",
-      value: stockData?.available_money,
+      value: stockData?.notAvalibal_fadi,
       description: "الفاضي الي برا لسه مش مستلم",
       isLoading: stockLoading,
       icon: EventAvailableIcon,

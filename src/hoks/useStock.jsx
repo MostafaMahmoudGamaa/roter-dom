@@ -14,7 +14,14 @@ export function useStock() {
   const dayName = selectedDay;
 
   const invalidData = () => {
-    queryClient.invalidateQueries(["stock", dayName]);
+        // queryClient.invalidateQueries(["stock"]);
+        queryClient.refetchQueries({
+          predicate: (query) =>
+            ['stock', 'trader',"stockLog"].includes(query.queryKey[0]),
+        });
+        
+    
+
   };
 
   const query = useQuery(
@@ -50,7 +57,7 @@ export function useTrader(traderID) {
       const traderLog = await wm.getTraderLog(traderID);
       return { trader, traderLog };
     } catch (err) {
-      console.log (Error("err when you get  trader", err));
+      console.log (Error("err when you get  trader"),err);
     }
   });
 }
@@ -59,14 +66,21 @@ export function useAddNewTrader() {
   const { selectedDay, daysLoading } = useAllDays();
   const { showToast } = useToast();
   const wh = new WarehouseManger(selectedDay,showToast);
-  async function addNewTrader(nameOfTrader, mlian, fadi, money) {
+  async function addNewTrader(nameOfTrader, mlian, fadi, money, slry) {
     try {
-      await wh.addTrader(nameOfTrader, mlian, fadi, money);
+      await wh.addTrader(nameOfTrader, mlian, fadi, money,slry);
     } catch (err) {
       console.log("err when you add new trader", err);
     }
   }
-  return { addNewTrader }
+  async function addFrdany(nameOfTrader, mlian, fadi, money,slry) {
+    try {
+      await wh.addFrdany(nameOfTrader, mlian, fadi, money,slry);
+    } catch (err) {
+      console.log("err when you add new frdany", err);
+    }
+  }
+  return { addNewTrader,addFrdany }
 }
 
 

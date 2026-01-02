@@ -5,18 +5,20 @@ import AppLoader from "../../../../AppLoader/AppLoader";
 
 export default function StockLogs() {
   const { data: stockLog, isLoading: stockLoading } = useGetStockLogs();
-
   if (stockLoading) return <AppLoader />;
 
   const logData = stockLog.map((log, i) => {
+    
     return {
       before: {
         mlian: log?.before_available_mlian,
         fadi: log?.before_available_fadi,
         money: log?.before_available_money,
         solid: log?.before_sold_mlian,
+        notFadi : log?.before_notAvalibal_fadi,
         totalMoney: log?.before_totalMoney,
         tradersMoney: log?.before_traders_money,
+
       },
       trader: {
         mlian: log?.traderMlian,
@@ -29,6 +31,7 @@ export default function StockLogs() {
         fadi: log?.after_available_fadi,
         money: log?.after_available_money,
         solid: log?.after_sold_mlian,
+        notFadi: log?.after_notAvalibal_fadi,
         totalMoney: log?.after_totalMoney,
         tradersMoney: log?.after_traders_money,
       },

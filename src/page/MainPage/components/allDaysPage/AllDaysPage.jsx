@@ -21,7 +21,7 @@ export default function AllDaysPage() {
   })
  },[searchQuery])
 
- console.log(allDays);
+
   const toggleDay = (id) => {
     setOpenDayId(openDayId === id ? null : id);
     setDayname(id);

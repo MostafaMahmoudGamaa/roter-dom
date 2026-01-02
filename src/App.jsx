@@ -19,8 +19,8 @@ import DetilseDay from "./page/MainPage/components/frontPage/DetilseDay";
 import StockLogs from "./page/MainPage/components/stockLog/StockLogs";
 
 function App() {
-  const { user, loading } = useContext(AuthStateContext);
-  const { selectedDay, daysLoading } = useAllDays();
+  const { loading } = useContext(AuthStateContext);
+
   if (loading ) {
     return <AppLoader />;
   }

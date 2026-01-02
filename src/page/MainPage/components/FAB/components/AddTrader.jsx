@@ -25,6 +25,7 @@ const AddTrader = React.memo(({ handleClose }) => {
     traderMlian: "",
     traderfadi: "",
     traderMoney: "",
+    traderSalry: 235
   });
 
   const filtredTraders = useMemo(() => {
@@ -117,6 +118,20 @@ const AddTrader = React.memo(({ handleClose }) => {
             setTraderData({
               ...traderData,
               traderMoney: e.target.value,
+            });
+          }}
+          fullWidth
+        />
+        <TextField
+          margin="dense"
+          id="salry"
+          label="سعر الاسطوانه"
+          type="numver"
+          value={traderData.traderSalry}
+          onChange={(e) => {
+            setTraderData({
+              ...traderData,
+              traderSalry: e.target.value,
             });
           }}
           fullWidth

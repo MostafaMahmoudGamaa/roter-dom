@@ -5,8 +5,8 @@ export default function TraderStatsCard({
   value,
   loadingText = "جاري التحميل",
   loading = false,
-  color = "blue", // blue, red, green, yellow, purple
-  icon // Optional icon component
+  color = "blue", 
+  icon 
 }) {
   const colorConfigs = {
     blue: {

@@ -17,11 +17,12 @@ export default function FabContainer({ handleClose }) {
         <ToggleButtons setSelectetTaps={setSelectedTap} taps={selectedTap} />
       </div>
 
-      {selectedTap === "addTrader" && <AddTrader handleClose={handleClose} />} {/* اضافه تاجر جديد*/} 
+      {(selectedTap ==  null || selectedTap === "addTrader" )&& <AddTrader handleClose={handleClose} />}
 
-      {selectedTap === "receiveTrader" && <ReceiveFromTrader handleClose={handleClose} />} {/* استلام من تاجر */}
+      {selectedTap === "receiveTrader" && <ReceiveFromTrader handleClose={handleClose} />} 
 
       {selectedTap === "addFradany" && <AddFradany handleClose={handleClose}/>}
+
 
 
     </>

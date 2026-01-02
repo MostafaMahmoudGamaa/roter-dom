@@ -12,7 +12,7 @@ import { useMemo } from "react";
 import React from "react";
 
 const AddFradany = React.memo(({ handleClose }) => {
-  const { addNewTrader } = useAddNewTrader();
+  const { addFrdany } = useAddNewTrader();
   const { showToast } = useToast();
   const dispatch = useDispatch();
   const { invalidData, data: trader } = useStock();
@@ -22,6 +22,7 @@ const AddFradany = React.memo(({ handleClose }) => {
     traderMlian: "1",
     traderfadi: "1",
     traderMoney: "230",
+    traderSalry: 235,
   });
 
   const addTraderHandler = async () => {
@@ -30,7 +31,7 @@ const AddFradany = React.memo(({ handleClose }) => {
       await dispatch(
         addTrader({
           traderData,
-          addNewTrader,
+          addFrdany,
           invalidData,
           undefined,
           handleClose,
@@ -105,6 +106,20 @@ const AddFradany = React.memo(({ handleClose }) => {
             setTraderData({
               ...traderData,
               traderMoney: e.target.value,
+            });
+          }}
+          fullWidth
+        />
+        <TextField
+          margin="dense"
+          id="salry"
+          label="سعر الاسطوانه"
+          type="numver"
+          value={traderData.traderSalry}
+          onChange={(e) => {
+            setTraderData({
+              ...traderData,
+              traderSalry: e.target.value,
             });
           }}
           fullWidth
