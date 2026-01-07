@@ -4,17 +4,14 @@ import MainPage from "./page/MainPage/MainPage";
 import RegisterPage from "./page/login/RegisterPage";
 import NotFoundPage from "./page/NotFoundPage";
 import { AuthStateContext } from "./context/AuthStateContext";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import MainPageContent from "./page/MainPage/components/mainPageContent/MainPageContent";
 import AddDayPage from "./page/MainPage/components/addDayPage/AddDayPage";
 import AllDaysPage from "./page/MainPage/components/AllDaysPage/AllDaysPage";
 import Traders from "./page/MainPage/components/trader/Traders";
-import { useState } from "react";
-import { WarehouseManger } from "./context/WarehouseManager";
 import AppLoader from "./AppLoader/AppLoader";
 import LoginGurd from "./AppLoader/LoginGurd";
 import AuthGurd from "./AppLoader/AuthGurd";
-import { useAllDays } from "./context/AllDaysProvider";
 import DetilseDay from "./page/MainPage/components/frontPage/DetilseDay";
 import StockLogs from "./page/MainPage/components/stockLog/StockLogs";
 

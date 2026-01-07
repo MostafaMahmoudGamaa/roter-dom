@@ -1,6 +1,7 @@
 import { WarehouseManger } from "../../../../context/WarehouseManager";
 import { useState } from "react";
 import { useToast } from "../../../../hoks/useToast";
+import { useStock } from "../../../../hoks/useStock";
 
 export default function newDay() {
   const [mlian, setMlian] = useState("300");
@@ -9,11 +10,13 @@ export default function newDay() {
   const today = new Date().toDateString();
   const [dayName, setDayName] = useState(today);
   const { showToast } = useToast();
+  const { invalidData } = useStock()
 
   const mangerStockData = new WarehouseManger(dayName,showToast);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    invalidData()
 
     mangerStockData.addStock(mlian, fadi, money);
 

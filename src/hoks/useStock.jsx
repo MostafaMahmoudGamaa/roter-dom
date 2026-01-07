@@ -17,7 +17,7 @@ export function useStock() {
         // queryClient.invalidateQueries(["stock"]);
         queryClient.refetchQueries({
           predicate: (query) =>
-            ['stock', 'trader',"stockLog"].includes(query.queryKey[0]),
+            ['stock', 'trader',"stockLog","allDays"].includes(query.queryKey[0]),
         });
         
     
